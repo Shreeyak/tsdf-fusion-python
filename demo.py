@@ -113,6 +113,14 @@ if __name__ == "__main__":
             files_color += sorted(dir_scene.glob('*' + ext))
         files_depth = sorted(dir_scene.glob('*' + ext_depth))
         files_metadata = sorted(dir_scene.glob('*' + ext_metadata))
+
+        n_files_color = len(files_color)
+        n_files_depth = len(files_depth)
+        n_files_metadata = len(files_metadata)
+        if n_files_color != n_files_depth or n_files_color != n_files_metadata:
+            raise ValueError(f'Found unequal number of color ({n_files_color}), depth({n_files_depth})'
+                             f'and metadata ({n_files_metadata}) files')
+
         if args.calc_vol_bounds:
             print("Estimating voxel volume bounds...")
             vol_bnds = np.zeros((3, 2))
@@ -139,7 +147,7 @@ if __name__ == "__main__":
             vol_bnds = np.array((
                 (-0.256, 0.256),
                 (-0.256, 0.256),
-                (0, 0.256),
+                (-0.01, 0.255),
             ))
 
         print('vol_bnds: ', vol_bnds)

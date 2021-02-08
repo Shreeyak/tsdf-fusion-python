@@ -40,7 +40,7 @@ class TSDFVolume:
         # Define voxel volume parameters
         self._vol_bnds = vol_bnds
         self._voxel_size = float(voxel_size)
-        self._trunc_margin = 0.016
+        self._trunc_margin = 0.02
         self._color_const = 256 * 256
 
         # Adjust volume bounds and ensure C-order contiguous

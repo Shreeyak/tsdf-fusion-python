@@ -18,8 +18,8 @@ import fusion
 ext_imgs = ['.color.jpg', '.color.png']
 ext_depth = '.depth.exr'
 ext_metadata = '.metadata.json'
-ext_tsdf = '.tsdf.npy'
-ext_mask = '.mask.npy'
+ext_tsdf = '.npy'
+ext_mask = '.npy'
 ext_col_grid = '.col_grid.npy'
 
 def exr_loader(EXR_PATH, ndim=3):
@@ -108,6 +108,7 @@ if __name__ == "__main__":
     num_scenes = len(scenes)
     for idx_scene in range(num_scenes):
         dir_scene = scenes[idx_scene]
+        scene_number = str(dir_scene)[-6:]
         files_color = []
         for ext in ext_imgs:
             files_color += sorted(dir_scene.glob('*' + ext))
@@ -147,7 +148,7 @@ if __name__ == "__main__":
             vol_bnds = np.array((
                 (-0.256, 0.256),
                 (-0.256, 0.256),
-                (-0.01, 0.255),
+                (-0.001, 0.255),
             ))
 
         print('vol_bnds: ', vol_bnds)
@@ -188,22 +189,22 @@ if __name__ == "__main__":
 
         # Get the TSDF volume
         tsdf_grid, color_grid = tsdf_vol.get_volume()
-        os.mkdir(dir_output / f'scene-{idx_scene:06d}')
-        f_mask = dir_output / f'scene-{idx_scene:06d}' / f'mask{ext_mask}'
-        np.save(str(f_mask), mask)
-        print(f'Saving Mask {f_mask}')
+        os.mkdir(dir_output / f'scene-{scene_number}')
+        # f_mask = dir_output / f'scene-{scene_number}' / f'mask{ext_mask}'
+        # np.save(str(f_mask), mask)
+        # print(f'Saving Mask {f_mask}')
 
-        f_tsdf_grid = dir_output / f'scene-{idx_scene:06d}' / f'tsdf{ext_tsdf}'
+        f_tsdf_grid = dir_output / f'scene-{scene_number}' / f'tsdf{ext_tsdf}'
         np.save(str(f_tsdf_grid), tsdf_grid)
         print(f'Saving TSDF {f_tsdf_grid}')
 
-        f_color_grid = dir_output / f'scene-{idx_scene:06d}' / f'col_grid{ext_col_grid}'
-        np.save(str(f_color_grid), color_grid)
-        print(f'Saving Color Voxel Grid {f_color_grid}')
+        # f_color_grid = dir_output / f'scene-{idx_scene:06d}' / f'col_grid{ext_col_grid}'
+        # np.save(str(f_color_grid), color_grid)
+        # print(f'Saving Color Voxel Grid {f_color_grid}')
 
         # Get mesh from voxel volume and save to disk (can be viewed with Meshlab)
         verts, faces, norms, colors = tsdf_vol.get_mesh()
-        f_mesh = dir_output / f'scene-{idx_scene:06d}' / f'mesh.ply'
+        f_mesh = dir_output / f'scene-{scene_number}' / f'mesh.ply'
         fusion.meshwrite(str(f_mesh), verts, faces, norms, colors)
         print(f'Saving mesh to {f_mesh}')
 
